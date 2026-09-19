@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#184a7a" />
+  <title>2026 스페인 한마디</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#132030;
+      --muted:#617387;
+      --line:#d9e2ec;
+      --brand:#184a7a;
+      --brand2:#2f6fa8;
+      --chip:#eef4fb;
+      --accent:#f5b940;
+      --danger:#c73a3a;
+      --ok:#19784a;
+      --shadow:0 8px 24px rgba(15, 40, 70, .08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#f7fbff 0%,#eef4fb 100%);
+    }
+    .wrap{
+      max-width:960px;
+      margin:0 auto;
+      padding:16px 14px 32px;
+    }
+    .hero{
+      background:linear-gradient(135deg,var(--brand),var(--brand2));
+      color:#fff;
+      border-radius:24px;
+      padding:20px 18px 18px;
+      box-shadow:var(--shadow);
+    }
+    .hero h1{margin:0 0 6px;font-size:28px;line-height:1.2}
+    .hero p{margin:6px 0 0;color:rgba(255,255,255,.92);font-size:14px;line-height:1.5}
+    .top-actions{
+      display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;
+    }
+    .btn{
+      border:none; border-radius:12px; padding:12px 14px; font-size:14px; font-weight:700;
+      background:#fff; color:var(--brand); cursor:pointer;
+      box-shadow:0 4px 14px rgba(0,0,0,.08);
+    }
+    .btn.primary{background:var(--accent); color:#222}
+    .searchbox{
+      background:var(--card); border-radius:18px; padding:14px; margin-top:14px; box-shadow:var(--shadow);
+    }
+    .searchbox input{
+      width:100%; padding:14px 14px; border:1px solid var(--line); border-radius:14px; font-size:16px;
+    }
+    .section{ margin-top:16px; }
+    .section-title{
+      display:flex; align-items:center; justify-content:space-between;
+      margin:10px 2px 10px;
+    }
+    .section-title h2{font-size:18px; margin:0}
+    .section-title span{font-size:13px; color:var(--muted)}
+    .chips{display:flex; gap:8px; flex-wrap:wrap}
+    .chip{
+      border:1px solid #cfe0ef; background:var(--chip); color:var(--brand); padding:10px 12px;
+      border-radius:999px; font-size:14px; font-weight:700; cursor:pointer;
+    }
+    .chip.active{background:var(--brand); color:#fff; border-color:var(--brand)}
+    .emergency, .quick, .phrases{
+      display:grid; gap:12px;
+    }
+    .emergency{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));}
+    .mini-card, .phrase-card, .info-card{
+      background:var(--card); border-radius:18px; box-shadow:var(--shadow); border:1px solid rgba(0,0,0,.03);
+    }
+    .mini-card{padding:14px}
+    .mini-card .label{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .mini-card .value{font-size:20px;font-weight:800}
+    .mini-card .sub{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+
+    .info-card{padding:14px 16px; line-height:1.6; font-size:14px}
+    .info-card strong{color:var(--brand)}
+
+    .quick{grid-template-columns:1fr;}
+    .phrase-card{padding:16px;}
+    .tag{
+      display:inline-block; padding:6px 10px; border-radius:999px; background:#eef4fb; color:var(--brand);
+      font-size:12px; font-weight:700; margin-bottom:12px;
+    }
+    .ko{font-size:19px; font-weight:800; line-height:1.35; margin-bottom:10px}
+    .es{font-size:18px; font-weight:700; color:var(--brand); line-height:1.45; margin-bottom:10px}
+    .pron{font-size:14px; line-height:1.5; color:#384a5e; margin-bottom:8px}
+    .pron strong{color:#000}
+    .note{font-size:13px; color:var(--muted); line-height:1.5; margin-top:4px}
+    .actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
+    .action-btn{
+      flex:1 1 120px; min-width:0; border:1px solid var(--line); background:#fff; color:#213346;
+      padding:12px 10px; border-radius:12px; font-weight:700; font-size:14px; cursor:pointer;
+    }
+    .action-btn.speak{background:#edf7ff; border-color:#cfe7fb; color:var(--brand)}
+    .action-btn.copy{background:#f7f9fb}
+    .action-btn.big{background:var(--brand); color:#fff; border-color:var(--brand)}
+    .footer{margin-top:22px; font-size:12px; color:var(--muted); line-height:1.5; text-align:center}
+    .hidden{display:none !important}
+    .install-note{font-size:12px;color:rgba(255,255,255,.9);margin-top:10px;line-height:1.5}
+    @media (min-width: 720px){
+      .quick{grid-template-columns:repeat(2,minmax(0,1fr));}
+      .phrases{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+
+    .mode-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    .mode-tab{border:1px solid var(--line);background:#fff;color:var(--brand);padding:11px 14px;border-radius:12px;font-weight:800;cursor:pointer}
+    .mode-tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .subchips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:thin}
+    .subchip{flex:0 0 auto;border:1px solid #cfe0ef;background:#fff;color:#294d70;padding:9px 11px;border-radius:999px;font-size:13px;font-weight:800;cursor:pointer}
+    .subchip.active{background:#e5f0fb;border-color:#8cb8df;color:#123f68}
+    .guide-panel{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:14px;margin-top:8px}
+    .guide-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+    .guide-head h3{margin:0;font-size:18px;color:var(--brand)}
+    .guide-head .meta{font-size:12px;color:var(--muted);text-align:right;line-height:1.45}
+    .guide-summary{font-size:14px;line-height:1.55;color:#374b60;background:#f7fafc;border:1px solid #e5edf4;border-radius:12px;padding:10px 12px;margin-bottom:12px}
+    .guide-phrases{display:grid;gap:10px}
+    @media (min-width:720px){.guide-phrases{grid-template-columns:repeat(2,minmax(0,1fr));}}
+    .modal{position:fixed;inset:0;background:rgba(7,20,34,.82);z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px}
+    .modal-card{width:min(720px,100%);background:#fff;border-radius:24px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.35)}
+    .modal-ko{font-size:19px;font-weight:800;margin-bottom:16px}
+    .modal-es{font-size:34px;line-height:1.25;font-weight:900;color:var(--brand);margin-bottom:16px}
+    .modal-pron{font-size:18px;line-height:1.5;color:#31485e;margin-bottom:18px}
+    .modal-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .modal-actions button{flex:1 1 140px;border:none;border-radius:14px;padding:14px;font-weight:800;font-size:15px;cursor:pointer}
+    .close-btn{background:#eef2f6;color:#24384d}.speak-btn{background:#dff0ff;color:#174a78}.copy-btn{background:var(--brand);color:#fff}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>2026 스페인 한마디</h1>
+      <p>마이클님의 스페인 일정에 맞춘 초간단 휴대폰용 웹앱입니다.<br>큰 글씨 · 스페인어 음성 · 복사 · 카테고리 검색을 지원합니다.</p>
+      <div class="top-actions">
+        <button class="btn primary" id="btnTopPhrases">오늘 자주 쓸 말</button>
+        <button class="btn" id="btnInterpreter">통역 프롬프트</button>
+        <button class="btn" id="btnEmergency">긴급 문장</button>
+        <button class="btn" id="btnTrip">일정·도시 전용</button>
+      </div>
+      <div class="install-note">
+        아이폰/안드로이드 브라우저에서 열고 <strong>홈 화면에 추가</strong>하면 앱처럼 쓸 수 있습니다.
+      </div>
+    </div>
+
+    <div class="searchbox">
+      <input type="text" id="searchInput" placeholder="예: 예약, 주차, 무릎, 경찰, 화장실" />
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <h2>긴급 정보</h2>
+        <span>한눈에 보기</span>
+      </div>
+      <div class="emergency">
+        <div class="mini-card"><div class="label">긴급전화</div><div class="value">112</div><div class="sub">경찰 · 구급 · 소방 공통</div></div>
+        <div class="mini-card"><div class="label">경찰에 말하기</div><div class="value">Llame a la policía.</div><div class="sub">야메 아 라 뽈리**씨**아<br>경찰 불러 주세요.</div></div>
+        <div class="mini-card"><div class="label">도난 신고</div><div class="value">Me han robado.</div><div class="sub">메 안 로**바**도<br>도난당했습니다.</div></div>
+        <div class="mini-card"><div class="label">약국</div><div class="value">¿Dónde hay una farmacia?</div><div class="sub">돈데 아이 우나 파르**마**씨아?<br>약국이 어디에 있나요?</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <h2>사용 팁</h2>
+      </div>
+      <div class="info-card">
+        1) <strong>한국어 문장</strong>을 먼저 보고 버튼으로 <strong>스페인어 음성</strong>을 재생하세요.<br>
+        2) 복잡하면 <strong>스페인어 복사</strong> 후 메신저·메모·번역앱에 붙여넣으세요.<br>
+        3) 동행자가 무릎이 약하므로 <strong>무릎·접근성</strong> 카테고리를 자주 활용하세요.<br>
+        4) 인터넷이 약해도 이 페이지는 한 번 열어두면 오프라인에서도 대부분 볼 수 있습니다.
+      </div>
+    </div>
+
+
+    <div class="section" id="tripPhraseSection">
+      <div class="section-title">
+        <h2>여행 일정 · 도시 전용 한마디</h2>
+        <span>이번 여행 맞춤</span>
+      </div>
+      <div class="mode-tabs">
+        <button class="mode-tab active" id="dayModeBtn">📅 날짜별 일정</button>
+        <button class="mode-tab" id="cityModeBtn">📍 도시별</button>
+      </div>
+      <div id="dayMode">
+        <div class="subchips" id="dayChips"></div>
+        <div id="dayPanel"></div>
+      </div>
+      <div id="cityMode" class="hidden">
+        <div class="subchips" id="cityChips"></div>
+        <div id="cityPanel"></div>
+      </div>
+    </div>
+
+    <div class="section quick" id="quickSection"></div>
+
+    <div class="section">
+      <div class="section-title">
+        <h2>카테고리</h2>
+        <span id="countLabel"></span>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <h2>문장 모음</h2>
+        <span>탭하면 크게 읽기 쉬운 카드</span>
+      </div>
+      <div class="phrases" id="phraseList"></div>
+    </div>
+
+    <div class="footer">
+      2026 Spain Travel Project · 맞춤 문장 앱<br>
+      음성 재생은 기기 설정에 따라 스페인어 음성이 다르게 들릴 수 있습니다.
+    </div>
+  </div>
+
+  <script>
+    const phrases = [
+      {cat:'오늘 자주 씀', quick:true, ko:'예약했습니다.', es:'Tengo una reserva.', pron:'뗑고 우나 레세르<strong>바</strong>.', note:'식당·호텔·관광지 공통'},
+      {cat:'오늘 자주 씀', quick:true, ko:'두 명입니다.', es:'Somos dos personas.', pron:'<strong>소</strong>모스 도스 페르<strong>소</strong>나스.', note:'예약 확인할 때 매우 자주 사용'},
+      {cat:'오늘 자주 씀', quick:true, ko:'동행자가 무릎이 좋지 않습니다.', es:'Mi acompañante tiene problemas de rodilla.', pron:'미 아꼼빠냔떼 띠에네 프로블레마스 데 로<strong>디</strong>야.', note:'이번 여행 핵심 문장'},
+      {cat:'오늘 자주 씀', quick:true, ko:'계단이 없는 길이 있나요?', es:'¿Hay una ruta sin escaleras?', pron:'아이 우나 루따 신 에스깔레<strong>라</strong>스?', note:'관광지·호텔·역 공통'},
+      {cat:'오늘 자주 씀', quick:true, ko:'엘리베이터를 사용할 수 있나요?', es:'¿Podemos usar el ascensor?', pron:'뽀데모스 우<strong>사</strong>르 엘 아센<strong>소</strong>르?', note:'무릎 때문에 꼭 저장 추천'},
+      {cat:'오늘 자주 씀', quick:true, ko:'계산서 주세요.', es:'La cuenta, por favor.', pron:'라 <strong>꾸엔</strong>따, por 파<strong>보르</strong>.', note:'식당에서 가장 자주 씀'},
+      {cat:'오늘 자주 씀', quick:true, ko:'화장실이 어디인가요?', es:'¿Dónde está el baño?', pron:'돈데 에스따 엘 <strong>바</strong>뇨?', note:'공공시설·카페·관광지 공통'},
+      {cat:'오늘 자주 씀', quick:true, ko:'도와주세요.', es:'Ayúdeme, por favor.', pron:'아유데메, por 파<strong>보르</strong>.', note:'비상시'},
+
+      {cat:'기본', ko:'안녕하세요.', es:'Hola.', pron:'<strong>올</strong>라.', note:'가볍고 친근한 인사'},
+      {cat:'기본', ko:'감사합니다.', es:'Gracias.', pron:'<strong>그라</strong>씨아스.', note:'정중하게는 “Muchas gracias.”'},
+      {cat:'기본', ko:'죄송합니다 / 실례합니다.', es:'Perdón.', pron:'뻬르<strong>돈</strong>.', note:'사람을 부를 때도 가능'},
+      {cat:'기본', ko:'영어 가능하세요?', es:'¿Habla inglés?', pron:'아블라 인<strong>글레</strong>스?', note:'빠르게 확인용'},
+      {cat:'기본', ko:'천천히 말씀해 주세요.', es:'Hable más despacio, por favor.', pron:'아블레 마스 데스<strong>빠</strong>씨오, por 파<strong>보르</strong>.', note:'상대방 말이 빠를 때'},
+      {cat:'기본', ko:'휴대폰 번역기를 보여드릴게요.', es:'Le enseño el traductor del móvil.', pron:'레 엔세뇨 엘 뜨라둑또르 델 <strong>모</strong>빌.', note:'복잡한 설명 전에 유용'},
+
+      {cat:'호텔', ko:'체크인하고 싶습니다.', es:'Quiero hacer el check-in.', pron:'끼에로 아<strong>쎄르</strong> 엘 체크인.', note:'도착 직후'},
+      {cat:'호텔', ko:'제 이름으로 예약했습니다.', es:'Tengo una reserva a nombre de Sungnyun Kim.', pron:'뗑고 우나 레세르<strong>바</strong> 아 놈브레 데 성년 킴.', note:'이름 부분만 바꾸면 됨'},
+      {cat:'호텔', ko:'짐을 맡길 수 있나요?', es:'¿Podemos dejar el equipaje?', pron:'뽀데모스 데<strong>하르</strong> 엘 에끼빠헤?', note:'체크인 전·후'},
+      {cat:'호텔', ko:'조용한 방 부탁드립니다.', es:'Preferimos una habitación tranquila.', pron:'쁘레페리모스 우나 아비따씨온 뜨랑<strong>낄</strong>라.', note:'소음이 걱정될 때'},
+      {cat:'호텔', ko:'주차장은 어디인가요?', es:'¿Dónde está el aparcamiento?', pron:'돈데 에스따 엘 아빠르까미엔<strong>또</strong>?', note:'호텔 도착 직후'},
+      {cat:'호텔', ko:'호텔에 차량 등록이 필요합니까?', es:'¿Hay que registrar la matrícula del coche?', pron:'아이 께 레히스뜨라르 라 마뜨리꿀라 델 <strong>꼬</strong>체?', note:'ZBE·주차·출입용'},
+      {cat:'호텔', ko:'늦게 도착할 예정입니다.', es:'Llegaremos tarde.', pron:'예가<strong>레</strong>모스 따르데.', note:'체크인 지연 연락용'},
+
+      {cat:'식당', ko:'실내 자리로 부탁드립니다.', es:'Preferimos una mesa dentro.', pron:'쁘레페리모스 우나 메사 <strong>덴</strong>뜨로.', note:'테라스보다 실내 원할 때'},
+      {cat:'식당', ko:'추천 메뉴가 무엇인가요?', es:'¿Qué nos recomienda?', pron:'께 노스 레꼬미엔<strong>다</strong>?', note:'현지 추천 받을 때'},
+      {cat:'식당', ko:'이 요리는 매운가요?', es:'¿Este plato es picante?', pron:'에스떼 쁠라또 에스 삐<strong>깐</strong>떼?', note:'매운맛 확인'},
+      {cat:'식당', ko:'물을 주세요. 탄산 없는 물로요.', es:'Agua, por favor. Sin gas.', pron:'아구아, por 파<strong>보르</strong>. 신 가스.', note:'가장 많이 씀'},
+      {cat:'식당', ko:'맥주 두 잔 주세요.', es:'Dos cervezas, por favor.', pron:'도스 쎄르<strong>베</strong>사스, por 파<strong>보르</strong>.', note:'casual하게 주문 가능'},
+      {cat:'식당', ko:'이것으로 주문하겠습니다.', es:'Pediremos esto.', pron:'뻬디레모스 <strong>에</strong>스또.', note:'메뉴판 가리키며 사용'},
+      {cat:'식당', ko:'저는 이것을 먹지 못합니다.', es:'No puedo comer esto.', pron:'노 뿌에도 꼬<strong>메르</strong> 에스또.', note:'알레르기·기호'},
+      {cat:'식당', ko:'카드로 결제하겠습니다.', es:'Pagaré con tarjeta.', pron:'빠가<strong>레</strong> 꼰 따르헤따.', note:'계산 시'},
+
+      {cat:'관광지', ko:'티켓이 있습니다.', es:'Tenemos entradas.', pron:'떼네모스 엔뜨라<strong>다</strong>스.', note:'입장 전'},
+      {cat:'관광지', ko:'예약 시간을 놓치지 않았나요?', es:'¿No hemos perdido la hora de la reserva?', pron:'노 에모스 뻬르디도 라 오라 데 라 레세르<strong>바</strong>?', note:'조금 늦었을 때'},
+      {cat:'관광지', ko:'가장 쉬운 동선은 무엇인가요?', es:'¿Cuál es la ruta más fácil?', pron:'꾸알 에스 라 루따 마스 <strong>파</strong>씰?', note:'무릎 약한 동행자용'},
+      {cat:'관광지', ko:'앉아서 쉴 곳이 있나요?', es:'¿Hay algún lugar para sentarse?', pron:'아이 알군 루가르 빠라 센<strong>따르</strong>세?', note:'장시간 관람 시'},
+      {cat:'관광지', ko:'화장실은 어디인가요?', es:'¿Dónde están los baños?', pron:'돈데 에스딴 로스 <strong>바</strong>뇨스?', note:'복수형도 많이 사용'},
+      {cat:'관광지', ko:'사진 촬영이 가능한가요?', es:'¿Se pueden hacer fotos?', pron:'세 뿌엔덴 아<strong>쎄르</strong> 포또스?', note:'성당·궁전 등'},
+      {cat:'관광지', ko:'얼마나 걸리나요?', es:'¿Cuánto tiempo se tarda?', pron:'꾸안또 띠엠뽀 세 따르<strong>다</strong>?', note:'코스 예상 시간'},
+
+      {cat:'렌터카·주차', ko:'렌터카입니다.', es:'Es un coche de alquiler.', pron:'에스 운 <strong>꼬</strong>체 데 알끼<strong>레르</strong>.', note:'주차장·호텔·경찰'},
+      {cat:'렌터카·주차', ko:'주차장 입구는 어디입니까?', es:'¿Dónde está la entrada del aparcamiento?', pron:'돈데 에스따 라 엔뜨라다 델 아빠르까미엔<strong>또</strong>?', note:'도심 숙소용'},
+      {cat:'렌터카·주차', ko:'오늘 밤 주차할 수 있나요?', es:'¿Podemos aparcar aquí esta noche?', pron:'뽀데모스 아빠르<strong>까르</strong> 아끼 에스따 노체?', note:'주차 가능 여부'},
+      {cat:'렌터카·주차', ko:'하루 주차 요금이 얼마인가요?', es:'¿Cuánto cuesta el aparcamiento por día?', pron:'꾸안또 꾸에스따 엘 아빠르까미엔<strong>또</strong> por 디아?', note:'사설주차장'},
+      {cat:'렌터카·주차', ko:'휘발유 95는 어느 펌프인가요?', es:'¿Cuál es la bomba de gasolina 95?', pron:'꾸알 에스 라 봄바 데 가솔리나 노벤따 이 씬꼬?', note:'주유소에서'},
+      {cat:'렌터카·주차', ko:'디젤 차량입니다.', es:'Es diésel.', pron:'에스 <strong>디</strong>에셀.', note:'연료 확인용'},
+      {cat:'렌터카·주차', ko:'차에 문제가 있는 것 같습니다.', es:'Creo que hay un problema con el coche.', pron:'끄레오 께 아이 운 프로블레마 꼰 엘 <strong>꼬</strong>체.', note:'렌터카 문의용'},
+
+      {cat:'이동·택시', ko:'택시를 불러주실 수 있나요?', es:'¿Puede llamar un taxi?', pron:'뿌에데 야마르 운 <strong>딱</strong>시?', note:'호텔·식당에서'},
+      {cat:'이 주소로 가 주세요.', es:'Por favor, llévenos a esta dirección.', pron:'por 파<strong>보르</strong>, 예베노스 아 에스따 디렉씨<strong>온</strong>.', note:'기사에게 보여주기'},
+      {cat:'이곳에서 내려 주세요.', es:'Déjenos aquí, por favor.', pron:'데헤노스 아<strong>끼</strong>, por 파<strong>보르</strong>.', note:'택시 하차'},
+      {cat:'카드 결제 되나요?', es:'¿Se puede pagar con tarjeta?', pron:'세 뿌에데 빠가르 꼰 따르<strong>헤</strong>따?', note:'택시·작은 상점'},
+      {cat:'이곳까지 얼마나 걸리나요?', es:'¿Cuánto tardamos hasta allí?', pron:'꾸안또 따르<strong>다</strong>모스 아스따 아이?', note:'택시·이동시간 확인'},
+
+      {cat:'무릎·접근성', ko:'동행자는 계단을 많이 오르기 어렵습니다.', es:'A mi acompañante le cuesta subir muchas escaleras.', pron:'아 미 아꼼빠냔떼 레 꾸에스따 수비르 무차스 에스깔레<strong>라</strong>스.', note:'긴 설명이 필요할 때'},
+      {cat:'무릎·접근성', ko:'가장 완만한 길로 가고 싶습니다.', es:'Queremos ir por la ruta más cómoda.', pron:'께레모스 이르 por 라 루따 마스 <strong>꼬</strong>모다.', note:'경사 적은 길 요청'},
+      {cat:'무릎·접근성', ko:'에스컬레이터가 있나요?', es:'¿Hay escaleras mecánicas?', pron:'아이 에스깔레라스 메<strong>까</strong>니까스?', note:'대형 관광지·백화점'},
+      {cat:'무릎·접근성', ko:'잠깐 쉬어도 될까요?', es:'¿Podemos descansar un momento?', pron:'뽀데모스 데스깐<strong>사르</strong> 운 모멘또?', note:'투어 중'},
+      {cat:'무릎·접근성', ko:'의자나 벤치가 있나요?', es:'¿Hay una silla o un banco?', pron:'아이 우나 <strong>시</strong>야 오 운 방꼬?', note:'앉을 곳 찾기'},
+
+      {cat:'쇼핑', ko:'이거 얼마인가요?', es:'¿Cuánto cuesta esto?', pron:'꾸안또 꾸에스따 <strong>에</strong>스또?', note:'시장·상점'},
+      {cat:'쇼핑', ko:'다른 색이 있나요?', es:'¿Lo tiene en otro color?', pron:'로 띠에네 엔 오뜨로 꼴<strong>로르</strong>?', note:'기념품·의류'},
+      {cat:'쇼핑', ko:'더 작은 / 큰 사이즈가 있나요?', es:'¿Tiene una talla más pequeña / más grande?', pron:'띠에네 우나 따야 마스 뻬께냐 / 마스 그란데?', note:'의류·신발'},
+      {cat:'쇼핑', ko:'면세가 가능한가요?', es:'¿Hacen tax free?', pron:'아센 택스 프리?', note:'고가 쇼핑'},
+
+      {cat:'응급·도난', ko:'지갑을 잃어버렸습니다.', es:'He perdido la cartera.', pron:'에 뻬르디도 라 까르떼<strong>라</strong>.', note:'분실'},
+      {cat:'응급·도난', ko:'휴대폰을 도난당했습니다.', es:'Me han robado el móvil.', pron:'메 안 로<strong>바</strong>도 엘 모빌.', note:'소매치기·도난'},
+      {cat:'응급·도난', ko:'여권을 잃어버렸습니다.', es:'He perdido el pasaporte.', pron:'에 뻬르디도 엘 빠사<strong>뽀르</strong>떼.', note:'매우 중요'},
+      {cat:'응급·도난', ko:'경찰 신고를 도와주세요.', es:'Ayúdeme a poner una denuncia, por favor.', pron:'아유데메 아 뽀네르 우나 데눈<strong>씨아</strong>, por 파<strong>보르</strong>.', note:'호텔·관광안내소·경찰서'},
+      {cat:'응급·도난', ko:'병원이 필요합니다.', es:'Necesito un hospital.', pron:'네세<strong>씨</strong>또 운 오스삐딸.', note:'의료'},
+      {cat:'응급·도난', ko:'약국이 어디인가요?', es:'¿Dónde hay una farmacia?', pron:'돈데 아이 우나 파르<strong>마</strong>씨아?', note:'상비약 추가 구입'},
+      {cat:'응급·도난', ko:'한국 영사관에 연락하고 싶습니다.', es:'Quiero contactar con el consulado de Corea.', pron:'끼에로 꼰딱따르 꼰 엘 꼰술라도 데 꼬<strong>레</strong>아.', note:'여권·사건사고 시'}
+    ];
+
+
+    const scheduleDays = [
+      {date:'9/25', title:'바르셀로나 도착 · 공항호텔', cities:'Barcelona Airport', summary:'늦은 밤 도착일. 공항 이동과 호텔 체크인만 간단히 처리.', phrases:[
+        {cat:'9/25',ko:'공항 호텔로 가는 셔틀은 어디에서 타나요?',es:'¿Dónde se toma el shuttle al hotel?',pron:'돈데 세 또마 엘 셔틀 알 오<strong>뗄</strong>?',note:'공항 도착 후'},
+        {cat:'9/25',ko:'늦게 도착했습니다. 예약했습니다.',es:'Llegamos tarde. Tenemos una reserva.',pron:'예가모스 따르데. 떼네모스 우나 레세르<strong>바</strong>.',note:'호텔 체크인'},
+        {cat:'9/25',ko:'내일 렌터카 터미널로 어떻게 가나요?',es:'¿Cómo vamos mañana a la zona de alquiler de coches?',pron:'꼬모 바모스 마냐나 아 라 소나 데 알끼레르 데 <strong>꼬</strong>체스?',note:'다음 날 준비'}]},
+      {date:'9/26', title:'바르셀로나 → 몬세라트 → 사라고사', cities:'Montserrat · Zaragoza', summary:'렌터카 인수, 몬세라트 접근성 확인, 사라고사 호텔·주차.', phrases:[
+        {cat:'9/26',ko:'렌터카를 예약했습니다.',es:'Tenemos una reserva de coche de alquiler.',pron:'떼네모스 우나 레세르바 데 꼬체 데 알끼<strong>레르</strong>.',note:'렌터카 카운터'},
+        {cat:'9/26',ko:'무릎이 좋지 않은 사람에게 가장 쉬운 길이 어디인가요?',es:'¿Cuál es la ruta más fácil para una persona con problemas de rodilla?',pron:'꾸알 에스 라 루따 마스 파씰 빠라 우나 페르소나 꼰 프로블레마스 데 로<strong>디</strong>야?',note:'몬세라트'},
+        {cat:'9/26',ko:'호텔 주차장에 차를 넣고 싶습니다.',es:'Queremos aparcar el coche en el parking del hotel.',pron:'께레모스 아빠르까르 엘 꼬체 엔 엘 빠르킹 델 오<strong>뗄</strong>.',note:'사라고사 도착'}]},
+      {date:'9/27', title:'사라고사 → 올리테 → 팜플로나 → 산세바스티안', cities:'Olite · Pamplona · San Sebastián', summary:'여러 도시를 짧게 방문하는 날. 주차·간단한 관광·핀초스 주문 중심.', phrases:[
+        {cat:'9/27',ko:'궁전 입구와 가까운 주차장이 어디인가요?',es:'¿Dónde está el parking más cercano a la entrada del palacio?',pron:'돈데 에스따 엘 빠르킹 마스 쎄르까노 아 라 엔뜨라다 델 빨라<strong>씨오</strong>?',note:'올리테'},
+        {cat:'9/27',ko:'이 바의 대표 핀초 하나 추천해 주세요.',es:'Recomiéndenos un pintxo típico de este bar.',pron:'레꼬미엔데노스 운 삔초 띠삐꼬 데 에스떼 <strong>바르</strong>.',note:'산세바스티안'},
+        {cat:'9/27',ko:'핀초 하나와 와인 한 잔 주세요.',es:'Un pintxo y una copa de vino, por favor.',pron:'운 삔초 이 우나 꼬빠 데 비노, por 파<strong>보르</strong>.',note:'바 호핑'}]},
+      {date:'9/28', title:'산세바스티안 → 부르고스 → 세고비아', cities:'Burgos · Segovia', summary:'장거리 이동과 중간 도시 관광. 대성당·구시가지·호텔 주차 표현을 준비.', phrases:[
+        {cat:'9/28',ko:'대성당 입구는 어디인가요?',es:'¿Dónde está la entrada de la catedral?',pron:'돈데 에스따 라 엔뜨라다 데 라 까떼<strong>드랄</strong>?',note:'부르고스'},
+        {cat:'9/28',ko:'30분 정도만 빠르게 둘러보고 싶습니다.',es:'Queremos hacer una visita rápida de unos treinta minutos.',pron:'께레모스 아쎄르 우나 비시따 라삐다 데 우노스 뜨레인따 미<strong>누</strong>또스.',note:'중간 정차'},
+        {cat:'9/28',ko:'수도교와 가까운 주차장은 어디인가요?',es:'¿Dónde está el parking más cercano al acueducto?',pron:'돈데 에스따 엘 빠르킹 마스 쎄르까노 알 아꾸에<strong>둑</strong>또?',note:'세고비아'}]},
+      {date:'9/29', title:'세고비아 · 라 그랑하', cities:'Segovia · La Granja', summary:'알카사르, 예약 점심, 라 그랑하. 무릎 부담이 적은 동선이 중요.', phrases:[
+        {cat:'9/29',ko:'알카사르 탑은 올라가지 않겠습니다.',es:'No vamos a subir a la torre del Alcázar.',pron:'노 바모스 아 수비르 아 라 또레 델 알<strong>까</strong>사르.',note:'알카사르'},
+        {cat:'9/29',ko:'13시 15분에 두 명 예약했습니다.',es:'Tenemos una reserva para dos a las trece y quince.',pron:'떼네모스 우나 레세르바 빠라 도스 아 라스 뜨레쎄 이 <strong>낀</strong>쎄.',note:'Mesón de Cándido'},
+        {cat:'9/29',ko:'돼지 통구이 코치니요를 주문하고 싶습니다.',es:'Queremos pedir cochinillo asado.',pron:'께레모스 뻬디르 꼬치니요 아<strong>사</strong>도.',note:'점심 주문'}]},
+      {date:'9/30', title:'세고비아 → 페드라사 → 아빌라', cities:'Pedraza · Ávila', summary:'작은 마을과 성벽 도시. 계단·경사 최소화 문의가 핵심.', phrases:[
+        {cat:'9/30',ko:'차를 어디에 세우고 구시가지로 가면 되나요?',es:'¿Dónde podemos aparcar para ir al casco antiguo?',pron:'돈데 뽀데모스 아빠르까르 빠라 이르 알 까스꼬 안<strong>띠</strong>구오?',note:'페드라사'},
+        {cat:'9/30',ko:'성벽에서 가장 걷기 쉬운 구간이 어디인가요?',es:'¿Qué tramo de la muralla es el más fácil para caminar?',pron:'께 뜨라모 데 라 무라야 에스 엘 마스 파씰 빠라 까미<strong>나르</strong>?',note:'아빌라'},
+        {cat:'9/30',ko:'계단이 적은 입구가 있나요?',es:'¿Hay una entrada con menos escaleras?',pron:'아이 우나 엔뜨라다 꼰 메노스 에스깔레<strong>라</strong>스?',note:'성벽·관광지'}]},
+      {date:'10/1', title:'아빌라 → 엘 에스코리알 → 마드리드', cities:'El Escorial · Madrid', summary:'왕립 수도원과 마드리드 왕궁 예약일. 시간 엄수와 택시 이동 중심.', phrases:[
+        {cat:'10/1',ko:'왕립 수도원 입구는 어디인가요?',es:'¿Dónde está la entrada del Monasterio?',pron:'돈데 에스따 라 엔뜨라다 델 모나스<strong>떼</strong>리오?',note:'El Escorial'},
+        {cat:'10/1',ko:'왕궁 15시 30분 예약이 있습니다.',es:'Tenemos una reserva para el Palacio Real a las quince y treinta.',pron:'떼네모스 우나 레세르바 빠라 엘 빨라씨오 레알 아 라스 낀쎄 이 <strong>뜨레인</strong>따.',note:'Madrid Royal Palace'},
+        {cat:'10/1',ko:'택시로 왕궁까지 가 주세요.',es:'Llévenos al Palacio Real, por favor.',pron:'예베노스 알 빨라씨오 레<strong>알</strong>, por 파보르.',note:'호텔→왕궁'}]},
+      {date:'10/2', title:'마드리드 → 코르도바', cities:'Córdoba', summary:'장거리 운전 후 메스키타와 저녁 예약. 주차와 늦은 입장 문의 유용.', phrases:[
+        {cat:'10/2',ko:'렌터카 교체를 예약했습니다.',es:'Tenemos reservada la sustitución del coche de alquiler.',pron:'떼네모스 레세르바다 라 수스띠뚜씨온 델 꼬체 데 알끼<strong>레르</strong>.',note:'차량 교체 시'},
+        {cat:'10/2',ko:'메스키타 입구는 어디인가요?',es:'¿Dónde está la entrada de la Mezquita-Catedral?',pron:'돈데 에스따 라 엔뜨라다 데 라 메스끼따 까떼<strong>드랄</strong>?',note:'코르도바'},
+        {cat:'10/2',ko:'20시 30분에 두 명 예약했습니다.',es:'Tenemos una reserva para dos a las veinte y treinta.',pron:'떼네모스 우나 레세르바 빠라 도스 아 라스 베인떼 이 <strong>뜨레인</strong>따.',note:'Casa Pepe'}]},
+      {date:'10/3', title:'코르도바 → 세비야', cities:'Sevilla', summary:'대성당 12:20, 플라멩코 19:30. 히랄다 계단은 동행자 때문에 생략.', phrases:[
+        {cat:'10/3',ko:'대성당 12시 20분 예약이 있습니다.',es:'Tenemos una reserva para la Catedral a las doce y veinte.',pron:'떼네모스 우나 레세르바 빠라 라 까떼드랄 아 라스 도쎄 이 <strong>베인</strong>떼.',note:'세비야 대성당'},
+        {cat:'10/3',ko:'무릎 문제 때문에 히랄다에는 올라가지 않겠습니다.',es:'No subiremos a la Giralda por un problema de rodilla.',pron:'노 수비레모스 아 라 히랄다 por 운 프로블레마 데 로<strong>디</strong>야.',note:'접근성 요청'},
+        {cat:'10/3',ko:'19시 30분 프리미엄 좌석 두 명 예약했습니다.',es:'Tenemos dos entradas Premium para las diecinueve y treinta.',pron:'떼네모스 도스 엔뜨라다스 프레미움 빠라 라스 디에씨누에베 이 <strong>뜨레인</strong>따.',note:'Teatro Flamenco Triana'}]},
+      {date:'10/4', title:'세비야 알카사르 → 론다', cities:'Sevilla · Ronda', summary:'아침 알카사르 예약 후 론다 이동. 전망대·구시가지에서 무리 없는 길을 선택.', phrases:[
+        {cat:'10/4',ko:'알카사르 9시 30분 예약이 있습니다.',es:'Tenemos una reserva para el Alcázar a las nueve y media.',pron:'떼네모스 우나 레세르바 빠라 엘 알까사르 아 라스 누에베 이 <strong>메</strong>디아.',note:'Real Alcázar'},
+        {cat:'10/4',ko:'가까운 정원만 보고 싶습니다.',es:'Queremos ver solo los jardines más cercanos.',pron:'께레모스 베르 솔로 로스 하르디네스 마스 쎄르<strong>까</strong>노스.',note:'동선 단축'},
+        {cat:'10/4',ko:'누에보 다리를 보기 가장 쉬운 전망대가 어디인가요?',es:'¿Cuál es el mirador más fácil para ver el Puente Nuevo?',pron:'꾸알 에스 엘 미라도르 마스 파씰 빠라 베르 엘 뿌엔떼 <strong>누에</strong>보?',note:'론다'}]},
+      {date:'10/5', title:'론다 → 세테닐(선택) → 그라나다', cities:'Setenil · Granada', summary:'세테닐은 컨디션에 따라 선택. 그라나다는 알바이신 택시 이동을 적극 활용.', phrases:[
+        {cat:'10/5',ko:'차로 가장 가까이 갈 수 있는 곳이 어디인가요?',es:'¿Hasta dónde podemos llegar en coche?',pron:'아스따 돈데 뽀데모스 예가르 엔 <strong>꼬</strong>체?',note:'세테닐·언덕 마을'},
+        {cat:'10/5',ko:'알바이신의 산 니콜라스 전망대까지 가 주세요.',es:'Llévenos al Mirador de San Nicolás, por favor.',pron:'예베노스 알 미라도르 데 산 니<strong>꼴</strong>라스, por 파보르.',note:'택시'},
+        {cat:'10/5',ko:'내리막으로 걷는 길을 알려주세요.',es:'Indíquenos una ruta que sea cuesta abajo.',pron:'인디께노스 우나 루따 께 세아 꾸에스따 아<strong>바</strong>호.',note:'무릎 부담 감소'}]},
+      {date:'10/6', title:'그라나다 · 알함브라', cities:'Granada · Alhambra', summary:'이번 여행의 핵심 예약일. 나스리 궁전 14:00, 입구 13:40 도착 목표.', phrases:[
+        {cat:'10/6',ko:'나스리 궁전 14시 예약입니다.',es:'Tenemos entrada para los Palacios Nazaríes a las catorce.',pron:'떼네모스 엔뜨라다 빠라 로스 빨라씨오스 나사리에스 아 라스 까<strong>또르</strong>쎄.',note:'가장 중요'},
+        {cat:'10/6',ko:'나스리 궁전 입구가 어디인가요?',es:'¿Dónde está la entrada de los Palacios Nazaríes?',pron:'돈데 에스따 라 엔뜨라다 데 로스 빨라씨오스 나사<strong>리</strong>에스?',note:'13:40 전 확인'},
+        {cat:'10/6',ko:'무릎 때문에 접근하기 쉬운 길로 가고 싶습니다.',es:'Por la rodilla, queremos ir por una ruta accesible.',pron:'por 라 로디야, 께레모스 이르 por 우나 루따 악쎄<strong>씨</strong>블레.',note:'Generalife·내부 이동'}]},
+      {date:'10/7', title:'그라나다 → 발렌시아', cities:'Valencia', summary:'긴 운전 후 발렌시아. 시장 마감시간과 호텔 주차를 먼저 확인.', phrases:[
+        {cat:'10/7',ko:'시장 몇 시에 닫나요?',es:'¿A qué hora cierra el mercado?',pron:'아 께 오라 씨에라 엘 메르<strong>까</strong>도?',note:'Ruzafa/Central Market'},
+        {cat:'10/7',ko:'발렌시아식 파에야를 추천해 주세요.',es:'Recomiéndenos una paella valenciana.',pron:'레꼬미엔데노스 우나 빠에야 발렌<strong>씨아</strong>나.',note:'식사'},
+        {cat:'10/7',ko:'시내에서 차를 어디에 두는 것이 좋나요?',es:'¿Dónde es mejor dejar el coche en el centro?',pron:'돈데 에스 메호르 데하르 엘 꼬체 엔 엘 <strong>쎈</strong>뜨로?',note:'주차'}]},
+      {date:'10/8', title:'발렌시아 → 바르셀로나 · 카사 바트요', cities:'Barcelona', summary:'렌터카 반납 후 도보·택시 중심. Casa Batlló Platinum 15:45.', phrases:[
+        {cat:'10/8',ko:'렌터카를 반납하러 왔습니다.',es:'Venimos a devolver el coche de alquiler.',pron:'베니모스 아 데볼베르 엘 꼬체 데 알끼<strong>레르</strong>.',note:'렌터카 반납'},
+        {cat:'10/8',ko:'카사 바트요 플래티넘 15시 45분 예약입니다.',es:'Tenemos una visita Platinum a Casa Batlló a las quince y cuarenta y cinco.',pron:'떼네모스 우나 비시따 플래티넘 아 까사 바뜨요 아 라스 낀쎄 이 꾸아렌따 이 <strong>씬</strong>꼬.',note:'Casa Batlló'},
+        {cat:'10/8',ko:'엘리베이터를 이용하고 싶습니다.',es:'Queremos usar el ascensor.',pron:'께레모스 우사르 엘 아센<strong>소르</strong>.',note:'무릎 보호'}]},
+      {date:'10/9', title:'바르셀로나 · 사그라다 → 구엘공원 → 7 Portes', cities:'Barcelona', summary:'예약이 연속된 핵심일. 입장시간과 택시 이동을 우선.', phrases:[
+        {cat:'10/9',ko:'사그라다 파밀리아 9시 45분 예약입니다.',es:'Tenemos entrada para la Sagrada Familia a las nueve y cuarenta y cinco.',pron:'떼네모스 엔뜨라다 빠라 라 사그라다 파밀리아 아 라스 누에베 이 꾸아렌따 이 <strong>씬</strong>꼬.',note:'탑 없음'},
+        {cat:'10/9',ko:'구엘공원 13시 예약입니다. 카르멜 입구로 가 주세요.',es:'Tenemos entrada al Park Güell a las trece. Llévenos a la entrada de la Carretera del Carmel.',pron:'떼네모스 엔뜨라다 알 빠르끄 구엘 아 라스 뜨레쎄. 예베노스 아 라 엔뜨라다 데 라 까레떼라 델 까르<strong>멜</strong>.',note:'택시 기사에게'},
+        {cat:'10/9',ko:'20시 30분에 두 명 예약했습니다. 실내 자리로 부탁드립니다.',es:'Tenemos una reserva para dos a las veinte y treinta. Preferimos una mesa dentro.',pron:'떼네모스 우나 레세르바 빠라 도스 아 라스 베인떼 이 뜨레인따. 쁘레페리모스 우나 메사 <strong>덴</strong>뜨로.',note:'7 Portes'}]},
+      {date:'10/10', title:'바르셀로나 · 팔라우 데 라 무지카', cities:'Barcelona', summary:'Palau 11:30 예약. 한국어 오디오가이드와 엘리베이터 문의.', phrases:[
+        {cat:'10/10',ko:'11시 30분 오디오가이드 방문 예약입니다.',es:'Tenemos una visita con audioguía a las once y media.',pron:'떼네모스 우나 비시따 꼰 아우디오기아 아 라스 온쎄 이 <strong>메</strong>디아.',note:'Palau de la Música'},
+        {cat:'10/10',ko:'한국어 오디오가이드가 있나요?',es:'¿Hay audioguía en coreano?',pron:'아이 아우디오기아 엔 꼬레<strong>아</strong>노?',note:'오디오가이드'},
+        {cat:'10/10',ko:'엘리베이터는 어디에 있나요?',es:'¿Dónde está el ascensor?',pron:'돈데 에스따 엘 아센<strong>소르</strong>?',note:'동행자 접근성'}]},
+      {date:'10/11', title:'바르셀로나 출국', cities:'BCN Airport', summary:'이른 아침 출발. 공항 터미널과 체크인 카운터 확인.', phrases:[
+        {cat:'10/11',ko:'바르셀로나 공항으로 가 주세요.',es:'Llévenos al Aeropuerto de Barcelona, por favor.',pron:'예베노스 알 아에로뿌에르또 데 바르쎌로나, por 파<strong>보르</strong>.',note:'택시'},
+        {cat:'10/11',ko:'이 항공편은 어느 터미널인가요?',es:'¿De qué terminal sale este vuelo?',pron:'데 께 떼르미날 살레 에스떼 <strong>부엘</strong>로?',note:'공항'},
+        {cat:'10/11',ko:'체크인 카운터가 어디인가요?',es:'¿Dónde está el mostrador de facturación?',pron:'돈데 에스따 엘 모스뜨라도르 데 팍뚜라<strong>씨온</strong>?',note:'공항'}]}
+    ];
+
+    const cityGuides = [
+      {name:'Barcelona', sub:'바르셀로나', summary:'혼잡지역 소매치기, 택시·예약시간, 접근성 표현을 자주 사용.', phrases:[
+        {cat:'Barcelona',ko:'사람이 많은 곳이라 가방을 앞쪽으로 메겠습니다.',es:'Voy a llevar el bolso delante porque hay mucha gente.',pron:'보이 아 예바르 엘 볼소 델란떼 뽀르께 아이 무차 <strong>헨</strong>떼.',note:'동행자끼리 확인용'},
+        {cat:'Barcelona',ko:'택시 승강장이 어디인가요?',es:'¿Dónde está la parada de taxis?',pron:'돈데 에스따 라 빠라다 데 <strong>딱</strong>시스?',note:'도시 이동'},
+        {cat:'Barcelona',ko:'예약 시간이 있어서 조금 서둘러 주세요.',es:'Tenemos una reserva. Si puede, un poco más rápido, por favor.',pron:'떼네모스 우나 레세르바. 씨 뿌에데, 운 뽀꼬 마스 라삐도, por 파<strong>보르</strong>.',note:'교통상황 허용 범위'}]},
+      {name:'Montserrat', sub:'몬세라트', summary:'경사·계단이 핵심. 접근성 좋은 동선 확인에 초점.', phrases:[
+        {cat:'Montserrat',ko:'걷는 거리가 가장 짧은 길이 어디인가요?',es:'¿Cuál es la ruta con menos distancia a pie?',pron:'꾸알 에스 라 루따 꼰 메노스 디스딴씨아 아 <strong>삐에</strong>?',note:'접근성'},
+        {cat:'Montserrat',ko:'엘리베이터나 경사로가 있나요?',es:'¿Hay ascensor o rampa?',pron:'아이 아센소르 오 <strong>람</strong>빠?',note:'시설 확인'}]},
+      {name:'Zaragoza', sub:'사라고사', summary:'호텔 주차와 El Tubo 타파스 중심.', phrases:[
+        {cat:'Zaragoza',ko:'엘 투보는 어느 방향인가요?',es:'¿En qué dirección está El Tubo?',pron:'엔 께 디렉씨온 에스따 엘 <strong>뚜</strong>보?',note:'저녁'},
+        {cat:'Zaragoza',ko:'작은 타파스 두 개 추천해 주세요.',es:'Recomiéndenos dos tapas pequeñas.',pron:'레꼬미엔데노스 도스 따빠스 뻬<strong>께</strong>냐스.',note:'가볍게 먹기'}]},
+      {name:'Olite · Pamplona', sub:'올리테 · 팜플로나', summary:'짧은 체류라 주차·입구·핵심 동선 질문이 유용.', phrases:[
+        {cat:'Navarra',ko:'한 시간 안에 볼 수 있는 핵심 코스가 무엇인가요?',es:'¿Cuál es la ruta principal para una visita de una hora?',pron:'꾸알 에스 라 루따 쁘린씨빨 빠라 우나 비시따 데 우나 <strong>오</strong>라?',note:'짧은 관광'},
+        {cat:'Navarra',ko:'구시가지 중심이 어디인가요?',es:'¿Dónde está el centro del casco antiguo?',pron:'돈데 에스따 엘 쎈뜨로 델 까스꼬 안<strong>띠</strong>구오?',note:'팜플로나'}]},
+      {name:'San Sebastián', sub:'산세바스티안', summary:'핀초스 바 호핑에 필요한 초간단 주문 문장이 핵심.', phrases:[
+        {cat:'San Sebastián',ko:'가장 인기 있는 핀초가 무엇인가요?',es:'¿Cuál es el pintxo más popular?',pron:'꾸알 에스 엘 삔초 마스 뽀뿔<strong>라르</strong>?',note:'핀초스 바'},
+        {cat:'San Sebastián',ko:'이것 하나와 화이트와인 한 잔 주세요.',es:'Uno de estos y una copa de vino blanco, por favor.',pron:'우노 데 에스또스 이 우나 꼬빠 데 비노 블랑꼬, por 파<strong>보르</strong>.',note:'메뉴 가리키며'}]},
+      {name:'Burgos', sub:'부르고스', summary:'중간 정차라 짧고 명확한 질문 위주.', phrases:[
+        {cat:'Burgos',ko:'대성당 관람에 얼마나 걸리나요?',es:'¿Cuánto tiempo se tarda en visitar la catedral?',pron:'꾸안또 띠엠뽀 세 따르다 엔 비시따르 라 까떼<strong>드랄</strong>?',note:'시간 관리'},
+        {cat:'Burgos',ko:'간단히 먹을 수 있는 곳을 추천해 주세요.',es:'Recomiéndenos un sitio para comer algo rápido.',pron:'레꼬미엔데노스 운 씨띠오 빠라 꼬메르 알고 <strong>라</strong>삐도.',note:'짧은 점심'}]},
+      {name:'Segovia · La Granja', sub:'세고비아 · 라 그랑하', summary:'알카사르 탑 생략, Cándido 예약, 정원 걷기 부담 최소화.', phrases:[
+        {cat:'Segovia',ko:'탑을 제외한 일반 관람만 하겠습니다.',es:'Haremos la visita general sin subir a la torre.',pron:'아레모스 라 비시따 헤네랄 신 수비르 아 라 <strong>또</strong>레.',note:'Alcázar'},
+        {cat:'Segovia',ko:'정원은 짧은 코스로 보고 싶습니다.',es:'Queremos hacer una ruta corta por los jardines.',pron:'께레모스 아쎄르 우나 루따 꼬르따 por 로스 하르<strong>디</strong>네스.',note:'La Granja'}]},
+      {name:'Ávila', sub:'아빌라', summary:'성벽과 경사를 최소화하는 표현 위주.', phrases:[
+        {cat:'Ávila',ko:'성벽 전체를 걷지 않고 일부만 보고 싶습니다.',es:'Queremos ver solo una parte de la muralla, no todo el recorrido.',pron:'께레모스 베르 솔로 우나 빠르떼 데 라 무라야, 노 또도 엘 레꼬<strong>리</strong>도.',note:'동선 단축'},
+        {cat:'Ávila',ko:'택시가 여기까지 올 수 있나요?',es:'¿Puede llegar un taxi hasta aquí?',pron:'뿌에데 예가르 운 딱시 아스따 아<strong>끼</strong>?',note:'걷기 줄이기'}]},
+      {name:'Madrid · El Escorial', sub:'마드리드 · 엘 에스코리알', summary:'왕궁 예약시간과 택시 이동을 우선.', phrases:[
+        {cat:'Madrid',ko:'왕궁 예약 입구가 어디인가요?',es:'¿Dónde está la entrada para las visitas con reserva al Palacio Real?',pron:'돈데 에스따 라 엔뜨라다 빠라 라스 비시따스 꼰 레세르바 알 빨라씨오 레<strong>알</strong>?',note:'예약 입구 확인'},
+        {cat:'Madrid',ko:'솔 광장까지 택시로 가 주세요.',es:'Llévenos a la Puerta del Sol, por favor.',pron:'예베노스 아 라 뿌에르따 델 솔, por 파<strong>보르</strong>.',note:'저녁 이동'}]},
+      {name:'Córdoba', sub:'코르도바', summary:'메스키타·후데리아·Casa Pepe 중심.', phrases:[
+        {cat:'Córdoba',ko:'메스키타의 가장 중요한 부분이 어디인가요?',es:'¿Cuál es la parte más importante de la Mezquita-Catedral?',pron:'꾸알 에스 라 빠르떼 마스 임뽀르딴떼 데 라 메스끼따 까떼<strong>드랄</strong>?',note:'관람'},
+        {cat:'Córdoba',ko:'몬티야-모릴레스 와인을 한 잔 추천해 주세요.',es:'Recomiéndenos una copa de vino Montilla-Moriles.',pron:'레꼬미엔데노스 우나 꼬빠 데 비노 몬띠야 모<strong>릴</strong>레스.',note:'지역 와인'}]},
+      {name:'Sevilla', sub:'세비야', summary:'대성당·알카사르·트리아나 플라멩코의 예약시간이 핵심.', phrases:[
+        {cat:'Sevilla',ko:'계단 없이 대성당만 관람하고 싶습니다.',es:'Queremos visitar solo la Catedral sin escaleras.',pron:'께레모스 비시따르 솔로 라 까떼드랄 신 에스깔레<strong>라</strong>스.',note:'Giralda 생략'},
+        {cat:'Sevilla',ko:'트리아나 시장은 어느 쪽인가요?',es:'¿Dónde está el Mercado de Triana?',pron:'돈데 에스따 엘 메르까도 데 뜨리<strong>아</strong>나?',note:'저녁 전'}]},
+      {name:'Ronda · Setenil', sub:'론다 · 세테닐', summary:'언덕과 계단이 많아 차량 접근·전망대 위치를 먼저 확인.', phrases:[
+        {cat:'Ronda',ko:'걷지 않고 차로 가까이 갈 수 있는 전망대가 있나요?',es:'¿Hay un mirador al que se pueda llegar cerca en coche?',pron:'아이 운 미라도르 알 께 세 뿌에다 예가르 쎄르까 엔 <strong>꼬</strong>체?',note:'론다'},
+        {cat:'Setenil',ko:'경사가 적은 길로 안내해 주세요.',es:'Indíquenos el camino con menos pendiente.',pron:'인디께노스 엘 까미노 꼰 메노스 뻰<strong>디엔</strong>떼.',note:'세테닐'}]},
+      {name:'Granada', sub:'그라나다', summary:'알함브라 예약시간과 알바이신 택시 이동이 중요.', phrases:[
+        {cat:'Granada',ko:'나스리 궁전 입장시간을 놓치면 안 됩니다.',es:'No podemos perder la hora de entrada a los Palacios Nazaríes.',pron:'노 뽀데모스 뻬르데르 라 오라 데 엔뜨라다 아 로스 빨라씨오스 나사<strong>리</strong>에스.',note:'14:00 예약'},
+        {cat:'Granada',ko:'택시로 가장 가까운 입구까지 가 주세요.',es:'Llévenos en taxi hasta la entrada más cercana, por favor.',pron:'예베노스 엔 딱시 아스따 라 엔뜨라다 마스 쎄르까나, por 파<strong>보르</strong>.',note:'걷기 최소화'}]},
+      {name:'Valencia', sub:'발렌시아', summary:'시장·구시가지·주차·파에야 관련 표현.', phrases:[
+        {cat:'Valencia',ko:'루사파 시장이 아직 열려 있나요?',es:'¿Todavía está abierto el Mercado de Ruzafa?',pron:'또다비아 에스따 아비에르또 엘 메르까도 데 루<strong>싸</strong>파?',note:'도착시간에 따라'},
+        {cat:'Valencia',ko:'파에야는 두 명이 먹기에 충분한가요?',es:'¿Esta paella es suficiente para dos personas?',pron:'에스따 빠에야 에스 수피씨엔떼 빠라 도스 페르<strong>소</strong>나스?',note:'식사'}]}
+    ];
+
+    const categories = ['전체', ...new Set(phrases.map(p => p.cat))];
+    let activeCat = '전체';
+    let searchTerm = '';
+
+    const chipsEl = document.getElementById('chips');
+    const phraseListEl = document.getElementById('phraseList');
+    const countLabel = document.getElementById('countLabel');
+    const searchInput = document.getElementById('searchInput');
+    const quickSection = document.getElementById('quickSection');
+    const dayChips = document.getElementById('dayChips');
+    const cityChips = document.getElementById('cityChips');
+    const dayPanel = document.getElementById('dayPanel');
+    const cityPanel = document.getElementById('cityPanel');
+    let activeDay = 0;
+    let activeCity = 0;
+
+    function copyText(text){
+      navigator.clipboard.writeText(text).then(()=>alert('스페인어 문장을 복사했습니다.')).catch(()=>alert('복사에 실패했습니다. 직접 길게 눌러 복사해 주세요.'));
+    }
+
+    function speakSpanish(text){
+      const utter = new SpeechSynthesisUtterance(text);
+      const voices = speechSynthesis.getVoices();
+      const esVoice = voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('es-es') || v.lang.toLowerCase().startsWith('es')));
+      if(esVoice) utter.voice = esVoice;
+      utter.lang = esVoice?.lang || 'es-ES';
+      utter.rate = 0.95;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utter);
+    }
+
+    function renderChips(){
+      chipsEl.innerHTML = '';
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'chip' + (cat === activeCat ? ' active' : '');
+        btn.textContent = cat;
+        btn.onclick = () => { activeCat = cat; renderAll(); };
+        chipsEl.appendChild(btn);
+      });
+    }
+
+    function matches(p){
+      const hay = (p.ko + ' ' + p.es + ' ' + p.pron + ' ' + (p.note||'') + ' ' + p.cat).toLowerCase();
+      const okCat = activeCat === '전체' || p.cat === activeCat;
+      const okSearch = !searchTerm || hay.includes(searchTerm.toLowerCase());
+      return okCat && okSearch;
+    }
+
+    function makePhraseCard(p){
+      const card = document.createElement('div');
+      card.className = 'phrase-card';
+      card.innerHTML = `
+        <div class="tag">${p.cat}</div>
+        <div class="ko">${p.ko}</div>
+        <div class="es">${p.es}</div>
+        <div class="pron">${p.pron}</div>
+        ${p.note ? `<div class="note">${p.note}</div>` : ''}
+        <div class="actions">
+          <button class="action-btn speak">🔊 듣기</button>
+          <button class="action-btn copy">📋 스페인어 복사</button>
+          <button class="action-btn big">🔎 크게보기</button>
+        </div>
+      `;
+      card.querySelector('.speak').onclick = () => speakSpanish(p.es);
+      card.querySelector('.copy').onclick = () => copyText(p.es);
+      card.querySelector('.big').onclick = () => showBigPhrase(p);
+      return card;
+    }
+
+
+    function showBigPhrase(p){
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.innerHTML = `<div class="modal-card">
+        <div class="modal-ko">${p.ko}</div>
+        <div class="modal-es">${p.es}</div>
+        <div class="modal-pron">${p.pron}</div>
+        <div class="modal-actions">
+          <button class="speak-btn">🔊 듣기</button>
+          <button class="copy-btn">📋 복사</button>
+          <button class="close-btn">닫기</button>
+        </div>
+      </div>`;
+      modal.querySelector('.speak-btn').onclick=()=>speakSpanish(p.es);
+      modal.querySelector('.copy-btn').onclick=()=>copyText(p.es);
+      modal.querySelector('.close-btn').onclick=()=>modal.remove();
+      modal.onclick=(e)=>{if(e.target===modal) modal.remove();};
+      document.body.appendChild(modal);
+    }
+
+    function renderGuidePanel(target, item){
+      target.innerHTML='';
+      const panel=document.createElement('div');
+      panel.className='guide-panel';
+      panel.innerHTML=`<div class="guide-head"><h3>${item.title || item.sub || item.name}</h3><div class="meta">${item.date ? item.date+'<br>' : ''}${item.cities || item.name || ''}</div></div><div class="guide-summary">${item.summary}</div><div class="guide-phrases"></div>`;
+      const holder=panel.querySelector('.guide-phrases');
+      item.phrases.forEach(p=>holder.appendChild(makePhraseCard(p)));
+      target.appendChild(panel);
+    }
+
+    function renderDayGuide(){
+      dayChips.innerHTML='';
+      scheduleDays.forEach((d,i)=>{
+        const b=document.createElement('button');
+        b.className='subchip'+(i===activeDay?' active':'');
+        b.textContent=`${d.date} ${d.cities.split('·')[0].trim()}`;
+        b.onclick=()=>{activeDay=i;renderDayGuide();};
+        dayChips.appendChild(b);
+      });
+      renderGuidePanel(dayPanel, scheduleDays[activeDay]);
+      const selected=dayChips.children[activeDay];
+      if(selected) selected.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+    }
+
+    function renderCityGuide(){
+      cityChips.innerHTML='';
+      cityGuides.forEach((c,i)=>{
+        const b=document.createElement('button');
+        b.className='subchip'+(i===activeCity?' active':'');
+        b.textContent=c.sub;
+        b.onclick=()=>{activeCity=i;renderCityGuide();};
+        cityChips.appendChild(b);
+      });
+      renderGuidePanel(cityPanel, cityGuides[activeCity]);
+    }
+
+    function setTripMode(mode){
+      const day = mode==='day';
+      document.getElementById('dayMode').classList.toggle('hidden', !day);
+      document.getElementById('cityMode').classList.toggle('hidden', day);
+      document.getElementById('dayModeBtn').classList.toggle('active', day);
+      document.getElementById('cityModeBtn').classList.toggle('active', !day);
+      if(day) renderDayGuide(); else renderCityGuide();
+    }
+
+    function autoSelectTravelDay(){
+      const now=new Date();
+      const m=now.getMonth()+1, d=now.getDate();
+      const key=`${m}/${d}`;
+      const idx=scheduleDays.findIndex(x=>x.date===key);
+      if(idx>=0) activeDay=idx;
+    }
+
+    function renderQuick(){
+      const quickList = phrases.filter(p => p.quick);
+      quickSection.innerHTML = '';
+      quickList.forEach(p => quickSection.appendChild(makePhraseCard(p)));
+    }
+
+    function renderPhrases(){
+      const filtered = phrases.filter(matches);
+      phraseListEl.innerHTML = '';
+      filtered.forEach(p => phraseListEl.appendChild(makePhraseCard(p)));
+      countLabel.textContent = `${filtered.length}개 문장`;
+    }
+
+    function renderAll(){
+      renderChips();
+      renderPhrases();
+    }
+
+    searchInput.addEventListener('input', e => {
+      searchTerm = e.target.value.trim();
+      renderPhrases();
+    });
+
+    document.getElementById('btnTopPhrases').onclick = () => {
+      activeCat = '오늘 자주 씀';
+      renderAll();
+      window.scrollTo({top: document.getElementById('phraseList').offsetTop - 80, behavior:'smooth'});
+    };
+
+    document.getElementById('btnEmergency').onclick = () => {
+      activeCat = '응급·도난';
+      renderAll();
+      window.scrollTo({top: document.getElementById('phraseList').offsetTop - 80, behavior:'smooth'});
+    };
+
+    document.getElementById('btnInterpreter').onclick = () => {
+      const prompt = '지금부터 한국어↔스페인어 통역 모드. 내가 한국어로 말하면 자연스러운 스페인어로만 통역하고, 상대가 스페인어로 말하면 한국어로만 통역해줘. 설명하지 말고 통역만 해줘.';
+      copyText(prompt);
+    };
+
+
+    document.getElementById('dayModeBtn').onclick = () => setTripMode('day');
+    document.getElementById('cityModeBtn').onclick = () => setTripMode('city');
+    document.getElementById('btnTrip').onclick = () => {
+      document.getElementById('tripPhraseSection').scrollIntoView({behavior:'smooth',block:'start'});
+    };
+
+    window.addEventListener('load', () => {
+      autoSelectTravelDay();
+      renderQuick();
+      renderAll();
+      renderDayGuide();
+      renderCityGuide();
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(()=>{});
+      }
+      // iOS sometimes delays voices
+      if (window.speechSynthesis) {
+        speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+      }
+    });
+  </script>
+</body>
+</html>
