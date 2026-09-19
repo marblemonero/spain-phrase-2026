@@ -1,0 +1,13 @@
+{
+  "name":"2026 스페인 한마디",
+  "short_name":"스페인 한마디",
+  "description":"2026 스페인 여행용 오프라인 회화 앱",
+  "lang":"ko",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#f4f7fb",
+  "theme_color":"#184a7a",
+  "orientation":"portrait-primary",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
